@@ -2,7 +2,6 @@ import { ShippingMethod } from '@ngrx-workshop-app/api-interface';
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import { Action, createReducer, on } from '@ngrx/store';
 import * as AppActions from '../app/app.actions';
-import * as CartActions from '../cart/cart.actions';
 import * as ShippingActions from './shipping.actions';
 
 export interface ShippingState extends EntityState<ShippingMethod> {
@@ -39,16 +38,13 @@ const shippingReducer = createReducer<ShippingState>(
   })),
   on(
     ShippingActions.shippingDialogSelectShippingMethod,
-    CartActions.cartPageSelectShippingMethod,
+    // TODO: CartActions.cartPageSelectShippingMethod,
     (state, { shippingMethod }) => ({
       ...state,
       selectedMethod: shippingMethod
     })
-  ),
-  on(CartActions.checkoutSuccess, state => ({
-    ...state,
-    selectedMethod: null
-  }))
+  )
+  // TODO: Add CartActions.checkoutSuccess
 );
 
 export function reducer(state: ShippingState | undefined, action: Action) {
