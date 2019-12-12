@@ -8,7 +8,10 @@ export const enterProductDetailsPage = createAction(
   props<{ id: string }>()
 );
 
-// TODO: Implement addToCart action
+export const addToCart = createAction(
+  '[Product Details Page] Add to cart',
+  props<{ productId: string }>()
+);
 
 export const loadProductsSuccess = createAction(
   '[Products API] Load Products Success',

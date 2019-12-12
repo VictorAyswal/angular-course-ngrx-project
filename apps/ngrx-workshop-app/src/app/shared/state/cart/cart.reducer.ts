@@ -1,17 +1,40 @@
-import { Action, createReducer } from '@ngrx/store';
+import { Action, createReducer, on } from '@ngrx/store';
+import { EntityState, createEntityAdapter } from '@ngrx/entity';
+import { Item } from '@ngrx-workshop-app/api-interface';
+import { enterCartPage, loadCartSuccess, loadCartFailure, addToCartSuccess, addToCartFailure } from './cart.actions';
+import { addToCart } from '../products/products.actions';
 
-// TODO: Implement Cart State Interface extending from EntityState
-export interface State {}
+export interface State extends EntityState<Item>{
+  loaded: boolean;
+  error: string | null;
+}
 
 export const cartFeatureKey = 'cart';
 
-// TODO: Implement Cart State Entity Adapter
+export const adapter = createEntityAdapter<Item>({
+  selectId: (item: Item) => item.itemId //indica que se tome item.itemId como ID
+});
 
-// TODO: Implement Cart Initial State
-export const initialState: State = {};
+export const initialState: State = adapter.getInitialState({
+  loaded: false,
+  error: null
+});
 
-// TODO: Implement On handlers for each action
-const cartReducer = createReducer(initialState);
+const cartReducer = createReducer(
+  initialState,
+  on(enterCartPage, addToCart, state => ({
+    ...state,
+    loaded: false,
+    error: null
+  })),
+  on(loadCartSuccess, addToCartSuccess, (state, { items }) =>
+    adapter.addAll(items, {...state, loaded: true, error: null})
+  ),
+  on(loadCartFailure, addToCartFailure, (state, { error }) => ({
+    ...state,
+    error
+  }))
+);
 
 export function reducer(state: State | undefined, action: Action) {
   return cartReducer(state, action);

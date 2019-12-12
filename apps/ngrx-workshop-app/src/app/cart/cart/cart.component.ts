@@ -6,6 +6,8 @@ import { map, startWith } from 'rxjs/operators';
 
 import { ItemWithProduct } from '@ngrx-workshop-app/api-interface';
 import * as fromShipping from '@ngrx-workshop-app/shared/state/shipping';
+import { enterCartPage } from '@ngrx-workshop-app/shared/state/cart/cart.actions';
+import { getCartItemsInCart, getAllItemsInCartWithProduct } from '@ngrx-workshop-app/shared/state/cart/cart.selectors';
 
 @Component({
   selector: 'app-cart',
@@ -18,7 +20,7 @@ export class CartComponent implements OnInit {
     address: new FormControl('', [Validators.required])
   });
 
-  items = new Array<ItemWithProduct>();
+  items$: Observable<ItemWithProduct[]> = this.store.pipe(select(getAllItemsInCartWithProduct));
   shippingOptions$ = this.store.pipe(
     select(fromShipping.selectAllShippingOptions)
   );
@@ -43,7 +45,11 @@ export class CartComponent implements OnInit {
 
   constructor(private store: Store<{}>) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.store.dispatch(
+      enterCartPage()
+    );
+  }
 
   optionSelected(shippingMethod: string) {}
 

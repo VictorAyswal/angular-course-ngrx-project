@@ -2,7 +2,7 @@
   <div>
     <h3>Cart - Subtotal: {{ cartSubtotal | currency }}</h3>
 
-    <div class="cart-item" *ngFor="let item of (items)">
+    <div class="cart-item" *ngFor="let item of (items$ | async)">
       <ng-container *ngIf="item.product">
         <span>{{ item.product.name }} </span>
         <span>{{ item.product.price | currency }}</span>

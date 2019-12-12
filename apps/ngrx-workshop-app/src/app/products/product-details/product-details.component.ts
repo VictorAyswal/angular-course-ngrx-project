@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
 import { Product } from '@ngrx-workshop-app/api-interface';
 import * as fromProducts from '@ngrx-workshop-app/shared/state/products';
 import { ProductActions } from '@ngrx-workshop-app/shared/state/products';
+import { addToCart } from '@ngrx-workshop-app/shared/state/products/products.actions';
 
 @Component({
   selector: 'app-product-details',
@@ -35,6 +36,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   addToCart(product: Product) {
+    this.store.dispatch(addToCart({ productId: product.productId }));
     this.snack.open('Product added to cart successfully!', null, {
       duration: 1000
     });
