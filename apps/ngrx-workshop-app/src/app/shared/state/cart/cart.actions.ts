@@ -19,3 +19,8 @@ export const addToCartFailure = createAction(
     '[Cart Api] Add to Cart Failure',
     props<{ error: any }>()
 );
+
+export const cartPageSelectShippingMethod = createAction(
+    '[Cart Page] Select Shipping Method',
+    props<{ shippingMethod: string }>()
+);

@@ -3,6 +3,7 @@ import { ItemWithProduct }  from '@ngrx-workshop-app/api-interface';
 
 import * as fromCart from './cart.reducer';
 import { getProductsEntities } from '../products';
+import { selectShippingCost } from '../shipping';
 
 const { selectAll, selectEntities } = fromCart.adapter.getSelectors();
 
@@ -35,4 +36,16 @@ export const getAllItemsInCartWithProduct = createSelector(
     getProductsEntities,
     (items, productEntities): ItemWithProduct[] =>
         items.map(item => ({ ...item, product: productEntities[item.productId] }))
+);
+
+export const getCartTotal = createSelector(
+    getAllItemsInCartWithProduct,
+    (itemsWithProductdata: ItemWithProduct[]): number =>
+        itemsWithProductdata.reduce((total, actual) => total + actual.product.price, 0)
+);
+
+export const getTotal = createSelector(
+    getCartTotal,
+    selectShippingCost,
+    (cartTotal, shippingCost) => cartTotal + shippingCost
 );

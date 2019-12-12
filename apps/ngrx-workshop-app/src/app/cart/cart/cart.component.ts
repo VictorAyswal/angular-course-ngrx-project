@@ -7,7 +7,8 @@ import { map, startWith } from 'rxjs/operators';
 import { ItemWithProduct } from '@ngrx-workshop-app/api-interface';
 import * as fromShipping from '@ngrx-workshop-app/shared/state/shipping';
 import { enterCartPage } from '@ngrx-workshop-app/shared/state/cart/cart.actions';
-import { getCartItemsInCart, getAllItemsInCartWithProduct } from '@ngrx-workshop-app/shared/state/cart/cart.selectors';
+import { getCartItemsInCart, getAllItemsInCartWithProduct, getCartTotal, getTotal } from '@ngrx-workshop-app/shared/state/cart/cart.selectors';
+import { CartActions } from '@ngrx-workshop-app/shared/state/cart';
 
 @Component({
   selector: 'app-cart',
@@ -20,16 +21,18 @@ export class CartComponent implements OnInit {
     address: new FormControl('', [Validators.required])
   });
 
-  items$: Observable<ItemWithProduct[]> = this.store.pipe(select(getAllItemsInCartWithProduct));
+  items$: Observable<ItemWithProduct[]> = this.store.pipe(
+    select(getAllItemsInCartWithProduct)
+  );
   shippingOptions$ = this.store.pipe(
     select(fromShipping.selectAllShippingOptions)
   );
   selectedMethod$ = this.store.pipe(
     select(fromShipping.selectSelectedShippingOption)
   );
-  cartSubtotal = 0;
+  cartSubtotal$ = this.store.pipe(select(getCartTotal));
   shippingSubtotal$ = this.store.pipe(select(fromShipping.selectShippingCost));
-  grandTotal = 0;
+  grandTotal$ = this.store.pipe(select(getTotal));
   shippingInvalid$ = this.store.pipe(select(fromShipping.getShippingInvalid));
   cartInvalid = false;
 
@@ -51,7 +54,9 @@ export class CartComponent implements OnInit {
     );
   }
 
-  optionSelected(shippingMethod: string) {}
+  optionSelected(shippingMethod: string) {
+    this.store.dispatch(CartActions.cartPageSelectShippingMethod({ shippingMethod }));
+  }
 
   onSubmit() {
     this.checkoutForm.reset();
