@@ -34,7 +34,7 @@ const cartReducer = createReducer(
     ...state,
     error
   })),
-  on(checkoutSuccess, (state) =>
+  on(checkoutSuccess, (state: State) =>
     adapter.removeAll({...state, loaded: false, error: null})
   )
 );
