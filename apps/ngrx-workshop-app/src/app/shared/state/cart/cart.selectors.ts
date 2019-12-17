@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { ItemWithProduct }  from '@ngrx-workshop-app/api-interface';
+import { ItemWithProduct, Item }  from '@ngrx-workshop-app/api-interface';
 
 import * as fromCart from './cart.reducer';
 import { getProductsEntities } from '../products';
@@ -48,4 +48,9 @@ export const getTotal = createSelector(
     getCartTotal,
     selectShippingCost,
     (cartTotal, shippingCost) => cartTotal + shippingCost
+);
+
+export const getCartInvalid = createSelector(
+    getCartItemsInCart,
+    (items: Item[]) => items.length === 0
 );

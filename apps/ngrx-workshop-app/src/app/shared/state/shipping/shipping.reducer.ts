@@ -45,8 +45,13 @@ const shippingReducer = createReducer<ShippingState>(
       ...state,
       selectedMethod: shippingMethod
     })
+  ),
+  on(CartActions.checkoutSuccess,
+    (state) => ({
+      ...state,
+      selectedMethod: null
+    })
   )
-  // TODO: Add CartActions.checkoutSuccess
 );
 
 export function reducer(state: ShippingState | undefined, action: Action) {

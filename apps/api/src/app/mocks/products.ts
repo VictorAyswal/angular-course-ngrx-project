@@ -17,6 +17,6 @@ export const mockProducts: Product[] = [
     productId: '3',
     name: 'Phone Standard',
     price: 299,
-    description: ''
+    description: 'The tipical phone'
   }
 ];

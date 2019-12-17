@@ -60,7 +60,7 @@
 
     <ul>
       <li *ngIf="(shippingInvalid$ | async)">Shipping Selection Required</li>
-      <li *ngIf="(cartInvalid)">Cart is Empty</li>
+      <li *ngIf="(cartInvalid$ | async)">Cart is Empty</li>
       <li *ngIf="(shippingInfoInvalid$ | async)">Name & Address Required</li>
     </ul>
   </ng-container>

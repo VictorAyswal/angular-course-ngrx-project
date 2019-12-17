@@ -1,7 +1,7 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
 import { Item } from '@ngrx-workshop-app/api-interface';
-import { enterCartPage, loadCartSuccess, loadCartFailure, addToCartSuccess, addToCartFailure } from './cart.actions';
+import { enterCartPage, loadCartSuccess, loadCartFailure, addToCartSuccess, addToCartFailure, checkoutSuccess, checkoutFailure } from './cart.actions';
 import { addToCart } from '../products/products.actions';
 
 export interface State extends EntityState<Item>{
@@ -30,10 +30,13 @@ const cartReducer = createReducer(
   on(loadCartSuccess, addToCartSuccess, (state, { items }) =>
     adapter.addAll(items, {...state, loaded: true, error: null})
   ),
-  on(loadCartFailure, addToCartFailure, (state, { error }) => ({
+  on(loadCartFailure, addToCartFailure, checkoutFailure, (state, { error }) => ({
     ...state,
     error
-  }))
+  })),
+  on(checkoutSuccess, (state) =>
+    adapter.removeAll({...state, loaded: false, error: null})
+  )
 );
 
 export function reducer(state: State | undefined, action: Action) {

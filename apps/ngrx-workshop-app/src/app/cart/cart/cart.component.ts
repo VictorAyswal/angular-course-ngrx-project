@@ -7,7 +7,7 @@ import { map, startWith } from 'rxjs/operators';
 import { ItemWithProduct } from '@ngrx-workshop-app/api-interface';
 import * as fromShipping from '@ngrx-workshop-app/shared/state/shipping';
 import { enterCartPage } from '@ngrx-workshop-app/shared/state/cart/cart.actions';
-import { getCartItemsInCart, getAllItemsInCartWithProduct, getCartTotal, getTotal } from '@ngrx-workshop-app/shared/state/cart/cart.selectors';
+import { getCartItemsInCart, getAllItemsInCartWithProduct, getCartTotal, getTotal, getCartInvalid } from '@ngrx-workshop-app/shared/state/cart/cart.selectors';
 import { CartActions } from '@ngrx-workshop-app/shared/state/cart';
 
 @Component({
@@ -34,7 +34,7 @@ export class CartComponent implements OnInit {
   shippingSubtotal$ = this.store.pipe(select(fromShipping.selectShippingCost));
   grandTotal$ = this.store.pipe(select(getTotal));
   shippingInvalid$ = this.store.pipe(select(fromShipping.getShippingInvalid));
-  cartInvalid = false;
+  cartInvalid$ = this.store.pipe(select(getCartInvalid));
 
   shippingInfoInvalid$ = this.checkoutForm.statusChanges.pipe(
     map(x => x !== 'VALID'),
@@ -43,7 +43,8 @@ export class CartComponent implements OnInit {
 
   checkoutDisabled$: Observable<boolean> = combineLatest([
     this.shippingInvalid$,
-    this.shippingInfoInvalid$
+    this.shippingInfoInvalid$,
+    this.cartInvalid$
   ]).pipe(map(arr => arr.some(x => x === true)));
 
   constructor(private store: Store<{}>) {}
@@ -60,5 +61,6 @@ export class CartComponent implements OnInit {
 
   onSubmit() {
     this.checkoutForm.reset();
+    this.store.dispatch(CartActions.checkout());
   }
 }

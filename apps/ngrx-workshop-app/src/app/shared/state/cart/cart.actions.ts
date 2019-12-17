@@ -24,3 +24,16 @@ export const cartPageSelectShippingMethod = createAction(
     '[Cart Page] Select Shipping Method',
     props<{ shippingMethod: string }>()
 );
+
+export const checkout = createAction(
+    '[Cart Page] Checkout'
+);
+
+export const checkoutSuccess = createAction(
+    '[Cart Api] Checkout Success'
+);
+
+export const checkoutFailure = createAction(
+    '[Cart Api] Checkout Failure',
+    props<{ error: any }>()
+);

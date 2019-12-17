@@ -41,6 +41,19 @@ export class CartEffects {
       )
     )
   );
+  checkout$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CartActions.checkout),
+      exhaustMap(() =>
+        this.cartService.checkout().pipe(
+          map(() => CartActions.checkoutSuccess()),
+          catchError(() =>
+            of(CartActions.checkoutFailure({ error: 'Unable to checkout' }))
+          )
+        )
+      )
+    )
+  );
 
   constructor(
     private actions$: Actions,
